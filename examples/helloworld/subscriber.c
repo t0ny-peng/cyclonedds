@@ -51,7 +51,7 @@ int main (int argc, char ** argv)
   {
     /* Do the actual read.
      * The return value contains the number of read samples. */
-    rc = dds_read (reader, samples, infos, MAX_SAMPLES, MAX_SAMPLES);
+    rc = dds_take (reader, samples, infos, MAX_SAMPLES, MAX_SAMPLES);
     if (rc < 0)
       DDS_FATAL("dds_read: %s\n", dds_strretcode(-rc));
 
@@ -63,7 +63,7 @@ int main (int argc, char ** argv)
       printf ("=== [Subscriber] Received : ");
       printf ("Message (%"PRId32", %s)\n", msg->userID, msg->message);
       fflush (stdout);
-      break;
+      dds_return_loan(reader, samples, MAX_SAMPLES); // Actually only return 1 sample loan
     }
     else
     {
